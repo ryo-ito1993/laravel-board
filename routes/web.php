@@ -17,13 +17,13 @@ use App\Http\Controllers\LikeController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -47,13 +47,13 @@ Route::prefix('posts')
         Route::delete('{post}', 'destroy')->whereNumber('post')->name('destroy');
 });
 
-Route::get('posts/{post}/comments/create', [CommentController::class, 'create'])->name('comment.create');
-Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comment.store');
-Route::get('comments/{comment}/edit', [CommentController::class, 'edit'])->name('comment.edit');
-Route::put('comments/{comment}', [CommentController::class, 'update'])->name('comment.update');
-Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
+Route::get('posts/{post}/comments/create', [CommentController::class, 'create'])->middleware('auth:web')->name('comment.create');
+Route::post('posts/{post}/comments', [CommentController::class, 'store'])->middleware('auth:web')->name('comment.store');
+Route::get('comments/{comment}/edit', [CommentController::class, 'edit'])->middleware('auth:web')->name('comment.edit');
+Route::put('comments/{comment}', [CommentController::class, 'update'])->middleware('auth:web')->name('comment.update');
+Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->middleware('auth:web')->name('comment.destroy');
 
-Route::post('like/{post}', [LikeController::class, 'store'])->name('like.store');
-Route::delete('/unlike/{post}',[LikeController::class,'destroy'])->name('like.destroy');
+Route::post('like/{post}', [LikeController::class, 'store'])->middleware('auth:web')->name('like.store');
+Route::delete('/unlike/{post}',[LikeController::class,'destroy'])->middleware('auth:web')->name('like.destroy');
 
 require __DIR__.'/auth.php';
